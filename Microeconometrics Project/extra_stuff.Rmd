@@ -1,0 +1,26 @@
+```{r}
+
+library(ipumsr)
+library(sf)
+library(dplyr)
+library(leaflet)
+
+#Load in GIS
+nhgis_csv<-"Data/nhgis0006_csv.zip"
+nhgis_shp<-"Data/nhgis0006_shape.zip"
+nhgis_ddi<-read_ipums_codebook(nhgis_csv)
+nhgis<-read_nhgis_sf(data_file = nhgis_csv,shape_file = nhgis_shp)
+```
+
+
+
+```{r}
+attr(nhgis,"sf_column")
+
+class(nhgis$geometry)
+
+
+
+
+```
+

@@ -1,0 +1,67 @@
+```{r}
+library(ipumsr)
+
+
+#Import and clean the data
+source("Scripts/cleanimport.R")
+
+```
+
+
+```{r}
+#Generate an empty vector
+coeff_yearsed<-0                    
+coeff_tenure<-0                                                             
+                         
+#Get coefficients of controls for each state                                    
+for (i in unique(data$STATEFIP)) {
+  
+name<-paste("state",i,sep="")
+
+linear<-lm(log(hourlywages)~yearsed+potentialexp+collegeyesno+male+year_2018+race_white,data = data[data$STATEFIP==i,])
+assign(name,linear)
+
+coeff_yearsed[i]<-linear$coefficients["yearsed"]
+coeff_tenure[i]<-linear$coefficients["potentialexp"]
+
+nhgis$educreturn[nhgis$STATEFP10==i]<-linear$coefficients["yearsed"]
+nhgis$tenurereturn[nhgis$STATEFP10==i]<-linear$coefficients["potentialexp"]
+}
+
+
+summary(state1)
+```
+
+
+
+
+
+```{r}
+
+library(ggplot2)
+ggplot(data=nhgis,aes(fill=educreturn))+geom_sf()+scale_fill_continuous("",labels=scales::percent)+labs(title = "Returns to education in percentage",subtitle = paste0("2018 Census ",caption = "Source: ",ipums_file_info(ddi,"ipums_project")))
+
+ggsave("Graphs/educ_return_web.png", width = 6, height = 6, dpi = "screen")
+```
+
+
+
+```{r}
+
+library(ggplot2)
+ggplot(data=nhgis,aes(fill=tenurereturn))+geom_sf()+scale_fill_continuous("",labels=scales::percent)+labs(title = "Returns to tenure in Percentage",subtitle = paste0("2018 Census ",caption = "Source: ",ipums_file_info(ddi,"ipums_project")))
+
+ggsave("Graphs/tenure_return_web.png", width = 6, height = 6, dpi = "screen")
+
+```
+
+
+
+
+
+
+```{r}
+
+
+```
+
